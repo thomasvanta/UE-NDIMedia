@@ -58,7 +58,13 @@ public class NDIMedia : ModuleRules
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		string ndi_sdk_path = Path.GetFullPath(Path.GetFullPath(Path.Combine(ThirdPartyPath, "NDI")));
-		string ndi_lib_path = Path.GetFullPath(Path.Combine(ndi_sdk_path, "Libraries/Win64"));
+
+        string ndi_lib_path = Path.GetFullPath(Path.Combine(ndi_sdk_path, "Libraries/Win64"));
+		if (Target.Platform == UnrealTargetPlatform.Mac)
+		{
+            ndi_lib_path = Path.GetFullPath(Path.Combine(ndi_sdk_path, "Libraries/macOS"));
+		}
+		 
 
 		PublicIncludePaths.AddRange(
 			new string[] {
@@ -79,6 +85,8 @@ public class NDIMedia : ModuleRules
 			new string[]
 			{
 				"Core",
+        		"RHI",
+        		"RenderCore",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -109,14 +117,31 @@ public class NDIMedia : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
+
+
+		if (Target.Platform == UnrealTargetPlatform.Win64)
+		{
+            PublicAdditionalLibraries.AddRange(
+    		new string[]
+    		{
+                Path.Combine(ndi_lib_path, "Processing.NDI.Lib.x64.lib"),
+    		});
+
+        } else if (Target.Platform == UnrealTargetPlatform.Mac)
+		{
+            PublicAdditionalLibraries.AddRange(
+            new string[]
+            {
+                //Path.Combine(ndi_lib_path, "libndi.dylib"),
+            });
+		}
 		
-		PublicAdditionalLibraries.AddRange(
-			new string[]
-			{
-				Path.Combine(ndi_lib_path, "Processing.NDI.Lib.x64.lib"),
-			});
-		
+
 		string ndi_dll_path = Path.Combine(ThirdPartyPath, "NDI", "Libraries", "Win64", "Processing.NDI.Lib.x64.dll");
+		if (Target.Platform == UnrealTargetPlatform.Mac)
+		{
+            ndi_dll_path = Path.Combine(ThirdPartyPath, "NDI", "Libraries", "macOS", "libndi.dylib");
+        }
 		CopyToProjectBinaries(ndi_dll_path, Target);
 		
 		PublicDelayLoadDLLs.Add(ndi_dll_path);

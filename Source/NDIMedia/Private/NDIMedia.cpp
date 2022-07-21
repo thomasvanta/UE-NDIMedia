@@ -10,6 +10,7 @@
 void FNDIMediaModule::StartupModule()
 {
 	SupportedPlatforms.Add(TEXT("Windows"));
+	SupportedPlatforms.Add(TEXT("Mac"));
 
 	SupportedUriSchemes.Add(TEXT("ndimediain"));
 	SupportedUriSchemes.Add(TEXT("ndimediaout"));

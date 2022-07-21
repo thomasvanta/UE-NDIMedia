@@ -26,6 +26,8 @@ public class NDIMediaEditor : ModuleRules
 			new string[]
 			{
 				"Core",
+        		"RHI",
+        		"RenderCore",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
