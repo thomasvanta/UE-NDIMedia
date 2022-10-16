@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,7 +23,7 @@ class NDIMEDIA_API UNDIMediaOutput
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")
-	FString SourceName = FString("UnrealEngile");
+	FString SourceName = FString("UnrealEngine");
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")
 	FIntPoint OutputSize = FIntPoint(1920, 1080);

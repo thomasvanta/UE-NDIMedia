@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "NDIMediaCapture.h"
@@ -30,6 +30,21 @@ bool UNDIMediaCapture::ValidateMediaOutput() const
 	return true;
 }
 
+bool UNDIMediaCapture::InitializeCapture(){
+    return true;
+}
+
+bool UNDIMediaCapture::PostInitializeCaptureViewport(TSharedPtr<FSceneViewport>& InSceneViewport){
+    UNDIMediaOutput* Output = CastChecked<UNDIMediaOutput>(MediaOutput);
+    OutputPixelFormat = Output->OutputPixelFormat;
+    return InitNDI(Output);
+}
+
+bool UNDIMediaCapture::PostInitializeCaptureRenderTarget(UTextureRenderTarget2D* InRenderTarget){
+    return false;
+}
+
+/*
 bool UNDIMediaCapture::CaptureSceneViewportImpl(TSharedPtr<FSceneViewport>& InSceneViewport)
 {
 	UNDIMediaOutput* Output = CastChecked<UNDIMediaOutput>(MediaOutput);
@@ -41,6 +56,7 @@ bool UNDIMediaCapture::CaptureRenderTargetImpl(UTextureRenderTarget2D* InRenderT
 {
 	return false;
 }
+*/
 
 bool UNDIMediaCapture::UpdateSceneViewportImpl(TSharedPtr<FSceneViewport>& InSceneViewport)
 {
