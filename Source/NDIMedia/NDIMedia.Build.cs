@@ -87,6 +87,7 @@ public class NDIMedia : ModuleRules
 				"Core",
         		"RHI",
         		"RenderCore",
+                "MediaAssets",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

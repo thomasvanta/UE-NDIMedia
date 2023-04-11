@@ -29,6 +29,10 @@ public:
 	FIntPoint OutputSize = FIntPoint(1920, 1080);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")
+ 	FFrameRate OutputFrameRate = FFrameRate(60, 1);
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")
 	ENDIMediaOutputPixelFormat OutputPixelFormat = ENDIMediaOutputPixelFormat::NDI_PF_RGB;
 
 	virtual bool Validate(FString& OutFailureReason) const override;

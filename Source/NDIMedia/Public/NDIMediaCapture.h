@@ -54,6 +54,7 @@ private:
 
 	FCriticalSection RenderThreadCriticalSection;
 	ENDIMediaOutputPixelFormat OutputPixelFormat;
+	FFrameRate OutputFrameRate;
 
 	std::deque<NDIFrameBuffer*> FrameBuffers;
 	uint8_t CurrentFrameBufferIndex = 0;
