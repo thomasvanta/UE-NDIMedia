@@ -59,6 +59,11 @@ class NDIMEDIA_API FNDIMediaPlayer
 	FNDIMediaTextureSamplePool* TextureSamplePool;
 	FNDIMediaBinarySamplePool* MetadataSamplePool;
 
+	TUniquePtr<FNDIMediaPlayerThread> Thread;
+	bool bInIsSRGBInput;
+
+	void OnInputFrameReceived(NDIlib_video_frame_v2_t* video_frame);
+
 public:
 
 	FNDIMediaPlayer(IMediaEventSink& InEventSink);

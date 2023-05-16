@@ -3,7 +3,7 @@
 
 #include "NDIMediaPlayer.h"
 
-include <assert.h>
+#include <assert.h>
 #include <string>
 #include <vector>
 
@@ -13,6 +13,7 @@ include <assert.h>
 
 #include "IMediaEventSink.h"
 #include "MediaIOCoreSamples.h"
+#include "MediaAssets/ProxyMediaSource.h"
 
 
  FNDIMediaPlayerThread::FNDIMediaPlayerThread(const Arguments& args)
@@ -54,7 +55,7 @@ include <assert.h>
  		NDIlib_video_frame_v2_t* video_frame = new NDIlib_video_frame_v2_t();
  		const NDIlib_frame_type_e frame_type = NDIlib_recv_capture_v3(pNDI_recv, video_frame,
  		                                                              nullptr, nullptr,
- 		                                                              100);
+ 		                                                              10);
 
  		if (frame_type == NDIlib_frame_type_video)
 			args.Player->OnInputFrameReceived(video_frame);
@@ -74,8 +75,9 @@ include <assert.h>
  void FNDIMediaPlayer::OnInputFrameReceived(NDIlib_video_frame_v2_t* video_frame)
  {
  	const FTimespan DecodedTime = FTimespan::FromSeconds(GetPlatformSeconds());
-
  	const TOptional<FTimecode> DecodedTimecode;
+
+
 	FrameRate = FFrameRate(video_frame->frame_rate_N, video_frame->frame_rate_D);
 
  	// metadata
@@ -89,8 +91,8 @@ include <assert.h>
 
  		Samples->AddMetadata(BinarySample);
 
- 		if (FrameMetadataReceivedDelegate.IsBound())
- 			FrameMetadataReceivedDelegate.Execute(FString(str.c_str()));
+ 		if (this->FrameMetadataReceivedDelegate.IsBound())
+ 			this->FrameMetadataReceivedDelegate.Execute(FString(str.c_str()));
  	}
 
  	// video
@@ -109,7 +111,7 @@ include <assert.h>
  			DecodedTime,
  			FrameRate,
  			DecodedTimecode,
- 			true
+            bInIsSRGBInput
  		);
 
  		Samples->AddVideo(TextureSample);
@@ -181,7 +183,7 @@ include <assert.h>
  			DecodedTime,
  			FrameRate,
  			DecodedTimecode,
- 			true
+            bInIsSRGBInput
  		);
 
  		Samples->AddVideo(TextureSample);
@@ -200,7 +202,7 @@ include <assert.h>
  			DecodedTime,
  			FrameRate,
  			DecodedTimecode,
- 			true
+            bInIsSRGBInput
  		);
 
  		Samples->AddVideo(TextureSample);
@@ -240,7 +242,7 @@ include <assert.h>
  			DecodedTime,
  			FrameRate,
  			DecodedTimecode,
- 			true
+            bInIsSRGBInput
  		);
 
  		Samples->AddVideo(TextureSample);
@@ -333,8 +335,17 @@ bool FNDIMediaPlayer::Open(const FString& Url, const IMediaOptions* Options)
 
 		///
 
-		const UNDIMediaSource* Source = static_cast<const UNDIMediaSource*>(Options);
-		ENDIMediaInputPixelFormat NDIPixelFormat = Source->InputPixelFormat;
+		//const UNDIMediaSource* Source = static_cast<const UNDIMediaSource*>(Options);
+		//ENDIMediaInputPixelFormat NDIPixelFormat = Source->InputPixelFormat;
+
+        const UProxyMediaSource* Proxy = static_cast<const UProxyMediaSource*>(Options);
+        const UNDIMediaSource* Source = static_cast<const UNDIMediaSource*>(Proxy->GetMediaSource());
+
+        if (Source == nullptr)
+            Source = static_cast<const UNDIMediaSource*>(Options);
+
+        const ENDIMediaInputPixelFormat NDIPixelFormat = Source->InputPixelFormat;
+        bInIsSRGBInput = Source->bInIsSRGBInput;
 
 		NDIlib_recv_create_v3_t settings;
 		settings.bandwidth = NDIlib_recv_bandwidth_highest;

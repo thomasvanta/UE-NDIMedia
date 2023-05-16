@@ -1,18 +1,19 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.0",
-	"FriendlyName": "NDI Media Player",
-	"Description": "",
-	"Category": "Other",
-	"CreatedBy": "BACKSPACE Productions Inc",
+	"VersionName": "1.1",
+	"FriendlyName": "NDI Media IO",
+	"Description": "Originally created by BACKSPACE Productions Inc and adapted at Hawtin Labs",
+	"Category": "Hawtin Labs",
+	"CreatedBy": "Hawtin Labs",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
-	"EngineVersion": "5.1.0",
 	"CanContainContent": true,
-	"Installed": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
 	"Modules": [
 		{
 			"Name": "NDIMedia",
@@ -40,6 +41,10 @@
 		},
 		{
 			"Name": "OpenColorIO",
+			"Enabled": true
+		},
+		{
+			"Name": "MediaFrameworkUtilities",
 			"Enabled": true
 		}
 	]

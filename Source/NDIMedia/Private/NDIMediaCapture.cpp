@@ -14,7 +14,6 @@ struct NDIFrameBuffer
 };
 
 UNDIMediaCapture::UNDIMediaCapture(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
 {
 }
 
@@ -32,8 +31,8 @@ bool UNDIMediaCapture::ValidateMediaOutput() const
 
 #if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 1
 bool UNDIMediaCapture::InitializeCapture(){
-    if (!Super::InitializeCapture())
- 		return false;
+    //if (!Super::InitializeCapture())
+ 	//	return false;
 
  	UNDIMediaOutput* Output = CastChecked<UNDIMediaOutput>(MediaOutput);
  	OutputPixelFormat = Output->OutputPixelFormat;
@@ -44,7 +43,7 @@ bool UNDIMediaCapture::PostInitializeCaptureViewport(TSharedPtr<FSceneViewport>&
     //UNDIMediaOutput* Output = CastChecked<UNDIMediaOutput>(MediaOutput);
     //OutputPixelFormat = Output->OutputPixelFormat;
     //return InitNDI(Output);
-	return false;
+	return true;
 }
 
 bool UNDIMediaCapture::PostInitializeCaptureRenderTarget(UTextureRenderTarget2D* InRenderTarget){
@@ -91,6 +90,8 @@ void UNDIMediaCapture::OnFrameCaptured_RenderingThread(const FCaptureBaseData& I
 
 	FrameBuffer->frame.frame_rate_N = OutputFrameRate.Numerator;
 	FrameBuffer->frame.frame_rate_D = OutputFrameRate.Denominator;
+
+	//TODO: check performance hit here
 	
 	if (OutputPixelFormat == ENDIMediaOutputPixelFormat::NDI_PF_P210)
 	{
@@ -158,29 +159,30 @@ bool UNDIMediaCapture::InitNDI(UNDIMediaOutput* Output)
 	{
 		while (this->NDISendThreadRunning)
 		{
-			bool has_queue = false;
+			bool bHasFrame = false;
 
 			{
 				FScopeLock ScopeLock(&this->RenderThreadCriticalSection);
-				has_queue = this->FrameBuffers.size() > 0;
+				bHasFrame = !this->FrameBuffers.empty();
 			}
 
-			if (has_queue)
-			{
-				NDIFrameBuffer* FrameBuffer = nullptr;
-				{
-					FScopeLock ScopeLock(&this->RenderThreadCriticalSection);
-					FrameBuffer = this->FrameBuffers.front();
-					this->FrameBuffers.pop_front();
-				}
-
-				NDIlib_send_send_video_v2(pNDI_send, &FrameBuffer->frame);
-				
-				delete FrameBuffer;
-			}
-			else
+			if (!bHasFrame)
 			{
 				std::this_thread::sleep_for(std::chrono::milliseconds(1));
+				continue;
+			}
+
+			FScopeLock ScopeLock(&this->RenderThreadCriticalSection);
+
+			while (!this->FrameBuffers.empty())
+			{
+				NDIFrameBuffer* FrameBuffer = FrameBuffer = this->FrameBuffers.front();
+				this->FrameBuffers.pop_front();
+
+				//NDIlib_send_send_video_v2(pNDI_send, &FrameBuffer->frame);
+				NDIlib_send_send_video_async_v2(pNDI_send, &FrameBuffer->frame);
+				
+				delete FrameBuffer;
 			}
 		}
 	});
