@@ -29,7 +29,7 @@ public:
 	FIntPoint OutputSize = FIntPoint(1920, 1080);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")
- 	FFrameRate OutputFrameRate = FFrameRate(60, 1);
+ 	FFrameRate OutputFrameRate = FFrameRate(30, 1);
 
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "NDI Media")

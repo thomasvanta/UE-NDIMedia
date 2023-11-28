@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -86,6 +86,10 @@ public:
 
 #if WITH_EDITOR
 	virtual const FSlateBrush* GetDisplayIcon() const override;
+#endif
+    
+#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 3
+    virtual TSharedPtr<FMediaIOCoreTextureSampleBase> AcquireTextureSample_AnyThread() const override;
 #endif
 
 FNDIMediaPlayerFrameMetadataReceivedDelegate FrameMetadataReceivedDelegate;

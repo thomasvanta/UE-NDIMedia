@@ -58,8 +58,8 @@ public class NDIMedia : ModuleRules
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		string ndi_sdk_path = Path.GetFullPath(Path.GetFullPath(Path.Combine(ThirdPartyPath, "NDI")));
-
         string ndi_lib_path = Path.GetFullPath(Path.Combine(ndi_sdk_path, "Libraries/Win64"));
+        
 		if (Target.Platform == UnrealTargetPlatform.Mac)
 		{
             ndi_lib_path = Path.GetFullPath(Path.Combine(ndi_sdk_path, "Libraries/macOS"));
@@ -85,8 +85,8 @@ public class NDIMedia : ModuleRules
 			new string[]
 			{
 				"Core",
-        		"RHI",
-        		"RenderCore",
+                "RHI",
+                "RenderCore",
                 "MediaAssets",
 				// ... add other public dependencies that you statically link with here ...
 			}
@@ -105,8 +105,8 @@ public class NDIMedia : ModuleRules
 				"MediaIOCore",
 				"TimeManagement",
 				"CinematicCamera",
-				"OpenColorIO",
 				"MovieSceneCapture",
+                "RenderCore",
                 "MediaFrameworkUtilities",
 				// ... add private dependencies that you statically link with here ...	
 			}
@@ -134,7 +134,7 @@ public class NDIMedia : ModuleRules
             PublicAdditionalLibraries.AddRange(
             new string[]
             {
-                //Path.Combine(ndi_lib_path, "libndi.dylib"),
+                Path.Combine(ndi_lib_path, "libndi.dylib"),
             });
 		}
 		

@@ -13,7 +13,7 @@ struct NDIFrameBuffer
 	std::vector<uint8_t> buffer;
 };
 
-UNDIMediaCapture::UNDIMediaCapture(const FObjectInitializer& ObjectInitializer)
+UNDIMediaCapture::UNDIMediaCapture(const FObjectInitializer& ObjectInitializer) : Super()
 {
 }
 
@@ -30,12 +30,11 @@ bool UNDIMediaCapture::ValidateMediaOutput() const
 }
 
 #if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 1
-bool UNDIMediaCapture::InitializeCapture(){
-    //if (!Super::InitializeCapture())
- 	//	return false;
-
+bool UNDIMediaCapture::InitializeCapture()
+{
  	UNDIMediaOutput* Output = CastChecked<UNDIMediaOutput>(MediaOutput);
  	OutputPixelFormat = Output->OutputPixelFormat;
+    OutputFrameRate = Output->OutputFrameRate;
  	return InitNDI(Output);
 }
 
@@ -179,8 +178,8 @@ bool UNDIMediaCapture::InitNDI(UNDIMediaOutput* Output)
 				NDIFrameBuffer* FrameBuffer = FrameBuffer = this->FrameBuffers.front();
 				this->FrameBuffers.pop_front();
 
-				//NDIlib_send_send_video_v2(pNDI_send, &FrameBuffer->frame);
-				NDIlib_send_send_video_async_v2(pNDI_send, &FrameBuffer->frame);
+				NDIlib_send_send_video_v2(pNDI_send, &FrameBuffer->frame);
+				//NDIlib_send_send_video_async_v2(pNDI_send, &FrameBuffer->frame);
 				
 				delete FrameBuffer;
 			}

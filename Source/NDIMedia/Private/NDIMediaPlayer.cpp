@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "NDIMediaPlayer.h"
@@ -434,6 +434,13 @@ void FNDIMediaPlayer::SetupSampleChannels()
 const FSlateBrush* FNDIMediaPlayer::GetDisplayIcon() const
 {
 	return nullptr;
+}
+#endif
+
+#if ENGINE_MAJOR_VERSION >= 5 && ENGINE_MINOR_VERSION >= 3
+TSharedPtr<FMediaIOCoreTextureSampleBase> FNDIMediaPlayer::AcquireTextureSample_AnyThread() const
+{
+    return TextureSamplePool->AcquireShared();
 }
 #endif
 
